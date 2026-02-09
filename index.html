@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¿Quieres ser mi Valentín?</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap');
+
+        body {
+            background-color: #fff5f5;
+            font-family: 'Quicksand', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .romantic-title {
+            font-family: 'Dancing Script', cursive;
+        }
+
+        .floating-heart {
+            position: absolute;
+            color: #ff4d6d;
+            pointer-events: none;
+            animation: float 4s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        #noButton {
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+
+        .hidden-section {
+            display: none;
+        }
+
+        .img-container img {
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(255, 77, 109, 0.2);
+            object-fit: cover;
+            width: 250px;
+            height: 250px;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div id="heartsContainer"></div>
+
+    <main id="mainCard" class="bg-white p-8 rounded-3xl shadow-2xl text-center max-w-lg w-full relative z-10 border-4 border-pink-100">
+        
+        <div id="questionStep">
+            <div class="img-container mb-6 flex justify-center">
+                <!-- Foto 1 inicial -->
+                <img id="mainImg" src="https://i.pinimg.com/474x/18/4a/10/184a10da920e25fd12b054d6ed5e0b83.jpg" alt="Foto Inicial">
+            </div>
+            
+            <h1 id="topText" class="romantic-title text-4xl mb-2 text-pink-600">¡Pequitas!</h1>
+            <p id="subText" class="text-gray-600 mb-8 text-lg">Llegó el momento de la verdad... 👉🏼👈🏼</p>
+            
+            <h2 id="mainQuestion" class="text-2xl font-bold text-gray-800 mb-8 px-4">¿Quisieras... ser... mi... San Valentín? 🤍</h2>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <button id="yesButton" class="bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 px-10 rounded-full text-xl shadow-lg transform hover:scale-110 transition-transform">
+                    ¡SÍ!
+                </button>
+                <button id="noButton" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3 px-10 rounded-full text-xl shadow-md">
+                    No
+                </button>
+            </div>
+        </div>
+
+        <div id="successStep" class="hidden-section">
+            <div class="img-container mb-6 flex justify-center">
+                <!-- Foto 3 final -->
+                <img id="finalImg" src="https://i.pinimg.com/236x/cf/e7/4d/cfe74d4c70c63cec364d8fed08874649.jpg" alt="Foto Final">
+            </div>
+            <h1 class="romantic-title text-5xl mb-4 text-pink-600">Ya ves que si querías 😄</h1>
+            <p class="text-gray-700 text-xl mb-6">Te amo mucho mi vida ¡Nos vemos el 14! 🥰</p>
+        </div>
+    </main>
+
+    <script>
+        const noButton = document.getElementById('noButton');
+        const yesButton = document.getElementById('yesButton');
+        const questionStep = document.getElementById('questionStep');
+        const successStep = document.getElementById('successStep');
+        const heartsContainer = document.getElementById('heartsContainer');
+        
+        const topText = document.getElementById('topText');
+        const subText = document.getElementById('subText');
+        const mainQuestion = document.getElementById('mainQuestion');
+        const mainImg = document.getElementById('mainImg');
+
+        let clickCount = 0;
+
+        // Lista de fotos en el orden: 1, 2, 6, 7 (la 3 va en el éxito)
+        // Reemplacen los enlaces aquí abajo con los links de sus fotos subidas
+        const fotosSecuencia = [
+            "https://i.pinimg.com/474x/18/4a/10/184a10da920e25fd12b054d6ed5e0b83.jpg", // Foto 1
+            "https://pbs.twimg.com/media/FtgtWTcWwAAhv5_.jpg", // Foto 2
+            "https://s.13.cl/sites/default/files/inline-images/2021-07/f6666eed82b7b63a49fadfe950ec56f8.jpeg", // Foto 6
+            "https://pbs.twimg.com/media/E66UPb5WQAMMOGv.jpg"  // Foto 7
+        ];
+
+        noButton.addEventListener('click', () => {
+            clickCount++;
+
+            if (clickCount === 1) {
+                // Se corrigió la falta de comilla aquí
+                topText.innerText = "Ehmmm...";
+                subText.innerText = "Nuevamente si? 😄";
+                mainImg.src = fotosSecuencia[1]; // Cambia a Foto 2
+            } else if (clickCount === 2) {
+                topText.innerText = "¡Oye!";
+                subText.innerText = "Creo que te equivocaste al dar click...🤔";
+                mainImg.src = fotosSecuencia[2]; // Cambia a Foto 6
+            } else if (clickCount === 3) {
+                topText.innerText = "Ay 🥺, a ver...";
+                subText.innerText = "Creo que tu máquina está fallando pequitas, intentemos una última vez...";
+                mainImg.src = fotosSecuencia[3]; // Cambia a Foto 7
+                setupButtonEvasion();
+            }
+        });
+
+        function moveNoButton() {
+            if (clickCount >= 3) {
+                const x = Math.random() * (window.innerWidth - noButton.offsetWidth);
+                const y = Math.random() * (window.innerHeight - noButton.offsetHeight);
+                noButton.style.position = 'fixed';
+                noButton.style.left = `${x}px`;
+                noButton.style.top = `${y}px`;
+            }
+        }
+
+        function setupButtonEvasion() {
+            noButton.addEventListener('mouseover', moveNoButton);
+            noButton.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                moveNoButton();
+            });
+        }
+
+        yesButton.addEventListener('click', () => {
+            questionStep.classList.add('hidden-section');
+            successStep.classList.remove('hidden-section');
+            successStep.style.display = 'block';
+            launchConfetti();
+        });
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('floating-heart');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            heartsContainer.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }
+
+        setInterval(createHeart, 300);
+
+        function launchConfetti() {
+            for (let i = 0; i < 100; i++) {
+                setTimeout(createHeart, i * 30);
+            }
+        }
+    </script>
+</body>
+</html>
